@@ -63,6 +63,7 @@
             $height = $this->getheight() * $scale/100;
             $this->resize($width,$height);
          }
+         
          function resize($width,$height) {
             $new_image = imagecreatetruecolor($width, $height);
             imagealphablending($new_image, false);
@@ -70,8 +71,21 @@
             imagecopyresampled($new_image, $this->image, 0, 0, 0, 0, $width, $height, $this->getWidth(), $this->getHeight());
             $this->image = $new_image;
          }
+         function cover ($width,$height) {
+            /* Заполнить область */
+            $w = $this->getWidth();
+            if ($width != $w) {
+              $this->resizeToWidth($width);
+            }
+            $h = $this->getHeight();
+            if ($height > $h) {
+              $this->resizeToHeight($height);
+            }
+            $this->wrapInTo ($width,$height);
+         }
          
          function wrapInTo ($width,$height) {
+            /* Обрезает все что не вмещается в область */
             $new_image = imagecreatetruecolor($width, $height);
             $w = $this->getWidth();
             $h = $this->getHeight();
@@ -97,25 +111,23 @@
               $dst_h = $height;
               $src_h = $height;
             }
-
             imagealphablending($new_image, false);
             imagesavealpha($new_image, true);
-
             $transparentindex = imagecolorallocatealpha($new_image, 255, 255, 255, 127);
             imagefill($new_image, 0, 0, $transparentindex);
-
-
             imagecopyresampled($new_image, $this->image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
             $this->image = $new_image;
          }
          
          function resizeInTo($width,$height) {
+            /* Масштабюировать чтобы изображение влезло в рамки */
             $ratiow = $width / $this->getWidth()*100;
             $ratioh = $height / $this->getHeight()*100;
             $ratio = min($ratiow, $ratioh);
             $this->scale($ratio);
          }   
          function crop($x1,$y1,$x2,$y2) {
+            /* Вырезать кусок */
             $w = abs($x2 - $x1);
             $h = abs($y2 - $y1);
             $x = min($x1,$x2);
