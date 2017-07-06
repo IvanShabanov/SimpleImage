@@ -22,7 +22,6 @@
             return true;               
          }
          function save($filename, $image_type=IMAGETYPE_JPEG, $compression=75, $permissions=null) {
-            imageinterlace ($this->image ,1);
             if( $image_type == IMAGETYPE_JPEG ) {
                imagejpeg($this->image,$filename,$compression);
             } elseif( $image_type == IMAGETYPE_GIF ) {
@@ -35,7 +34,6 @@
             }
          }
          function output($image_type=IMAGETYPE_JPEG) {
-            imageinterlace ($this->image ,1);
             if( $image_type == IMAGETYPE_JPEG ) {
                imagejpeg($this->image);
             } elseif( $image_type == IMAGETYPE_GIF ) {
@@ -127,7 +125,14 @@
             $ratioh = $height / $this->getHeight()*100;
             $ratio = min($ratiow, $ratioh);
             $this->scale($ratio);
-         }   
+         }
+         
+         function smallTo($width,$height) {
+            if (($this->getWidth() > $width) or ($this->getHeight() > $height)) {
+              $this->resizeInTo($width,$height)
+            }
+         }
+         
          function crop($x1,$y1,$x2,$y2) {
             /* Вырезать кусок */
             $w = abs($x2 - $x1);
