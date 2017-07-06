@@ -129,8 +129,8 @@
          
          function smallTo($width,$height) {
             if (($this->getWidth() > $width) or ($this->getHeight() > $height)) {
-              $this->resizeInTo($width,$height)
-            }
+              $this->resizeInTo($width,$height);
+            };
          }
          
          function crop($x1,$y1,$x2,$y2) {
