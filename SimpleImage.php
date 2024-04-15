@@ -45,6 +45,27 @@ class CSimpleImage
 	}
 
 	/**
+	 * Set Image (установить изображение)
+	 */
+	public function SetImage($img, $img_type = IMAGETYPE_PNG)
+	{
+		$this->image = $img;
+		$this->image_type = $img_type;
+	}
+
+
+	/**
+	 * New Image (получить экземпляр изображения)
+	 */
+	public function NewImage($w, $h, $img_type = IMAGETYPE_PNG)
+	{
+		$this->image = imagecreatetruecolor($w, $h);
+		imagealphablending($this->image, false);
+		imagesavealpha($this->image, true);
+		$this->image_type = $img_type;
+	}
+	
+	/**
 	 * Save Image (Сохранит изображение)
 	 *   @param $filename - filename (имя файла)
 	 *   @param $image_type - type (тип файла) (IMAGETYPE_JPEG / IMAGETYPE_GIF / IMAGETYPE_PNG / IMAGETYPE_WEBP)
@@ -307,5 +328,43 @@ class CSimpleImage
 		imagecopy($new_image, $this->image, 0, 0, $x, $y, $w, $h);
 		$this->image = $new_image;
 		return true;
+	}
+
+	public function setBackgroundColor($red, $green, $blue)
+	{
+		if (!$this->image) {
+			return false;
+		}
+
+		$w         = $this->getWidth();
+		$h         = $this->getHeight();
+		$new_image  = imagecreatetruecolor($w, $h);
+
+		$color = imagecolorallocate($new_image, $red, $green, $blue);
+
+		imagefilledrectangle($new_image, 0, 0, $w, $h, $color);
+		imagecopy($new_image , $this->image, 0, 0, 0, 0, $w, $h);
+		$this->image = $new_image;
+	}
+
+	public function fill($red, $green, $blue)
+	{
+		if (!$this->image) {
+			return false;
+		}
+		$w         = $this->getWidth();
+		$h         = $this->getHeight();
+		$color = imagecolorallocate($this->image, $red, $green, $blue);
+		imagefilledrectangle($this->image, 0, 0, $w, $h, $color);
+	}
+	
+	public function watermark($imgWatermark, $x, $y)
+	{
+		if (!$this->image) {
+			return false;
+		}
+		$w = imagesx($imgWatermark);
+		$h = imagesy($imgWatermark);
+		imagecopy($this->image, $imgWatermark, $x, $y, 0, 0, $w, $h);
 	}
 }
