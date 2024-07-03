@@ -654,4 +654,51 @@ class SimpleImage
 		}
 		return $result;
 	}
+
+	/**
+	 * Method setTransparentByColor
+	 * Установить прозначьность по цвету
+	 * @param $red
+	 * @param $green
+	 * @param $blue
+	 *
+	 * @return bool
+	 */	public function setTransparentByColor($red = 255, $green = 255, $blue = 255): bool
+	{
+		$result = false;
+		if (!$this->image) {
+			return $result;
+		}
+		try {
+			$color = imagecolorallocate($this->image, $red, $green, $blue);
+			imagecolortransparent($this->image, $color);
+		} catch (Exception $e) {
+			$this->last_error = $e->getMessage();
+			$result = false;
+		}
+		return $result;
+	}
+
+	/**
+	 * Method setTransparentByCoord
+	 * Установить прозначьность по цвету пикселя по координатам
+	 * @param $x
+	 * @param $y
+	 *
+	 * @return bool
+	 */	public function setTransparentByCoord($x = 1, $y = 1): bool
+	 {
+		$result = false;
+		if (!$this->image) {
+			return $result;
+		}
+		try {
+			$color = imagecolorat($this->image, $x, $y);
+			imagecolortransparent($this->image, $color);
+		} catch (Exception $e) {
+			$this->last_error = $e->getMessage();
+			$result = false;
+		}
+		return $result;
+	}
 }
